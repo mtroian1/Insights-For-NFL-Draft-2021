@@ -1,0 +1,224 @@
+---
+title: "Code for NFL Draft 2021 Insight"
+author: "Marissa Troiano-Yang"
+date: "4/1/2021"
+output: html_document
+---
+Here is the code I used for "Insights for NFL Draft 2021."
+
+#Load Packages
+
+```{r}
+library(RMySQL)
+library(DBI)
+pacman::p_load(magrittr, tidyverse)
+library(gridironaiR)
+library(GGally)
+library(dplyr)
+```
+
+#Connect and Query SQL database
+
+```{r}
+connection <- dbConnect(MySQL(), user='gridironai', password='thenameofthewind', dbname='gridironai', host='footballai-db-prod.cxgq1kandeps.us-east-2.rds.amazonaws.com')
+
+team_data_pff <- dbGetQuery(connection,
+"SELECT * 
+FROM 
+        gridironai.dim_team_data_pff
+ORDER BY 
+        season DESC,
+        pfr_franchise_code_id ASC")
+
+team_data_pfr_rolling_avg <- dbGetQuery(connection,
+"SELECT * 
+FROM 
+        gridironai.dim_team_data_pfr_rolling_avg
+ORDER BY 
+        season DESC,
+        player_team_pfr_franchise_code_id ASC")
+
+dbDisconnect(connection)
+```
+
+#Data Cleaning
+
+To clean and subset the data for analysis, I removed the 3 game averages, Pro Football Reference grades, and any data related to the opponent. To see the total wins per team each season, I compared the final team and opponent scores and saved the data in a new column. I edited the team_name column for readability, grouped data by the team and season, then determined the sum of each variable for the season.
+
+```{r}
+team_data_pfr <- team_data_pfr_rolling_avg[,1:135] %>% 
+        subset(week <= 17)
+
+team_data_pfr %>% 
+        season_week_to_char()
+
+drop_cols <- c("week", "attendance", "home_away_ind", "team_q1", "team_q2", "team_q3", "team_q4", "opponent_q1", "opponent_q2", "opponent_q3", "opponent_q4", "defense_pass", "defense_rush", "defense_tot", "defense_tovr", "offense_pass", "offense_rush", "offense_tot", "offense_tovr", "specialteams_fgxp", "specialteams_ko", "specialteams_kr", "specialteams_p", "specialteams_pr", "specialteams_tot", "total", "q1_margin", "q2_margin", "q3_margin", "q4_margin", "margin_of_victory", "time_of_posession_diff")
+
+opp_cols <- team_data_pfr %>% 
+        select(ends_with("_opp")) %>% 
+        colnames() 
+
+team_data_agg <- team_data_pfr %>% 
+        mutate(wins = if_else(team_data_pfr$team_final > team_data_pfr$opponent_final, 1, 0)) %>%
+        rename(team_name = player_team_pfr_franchise_code_id) %>% 
+        relocate(wins, .after = season) %>% 
+        select(-one_of(c(drop_cols, opp_cols))) %>% 
+        group_by(team_name, season) %>% 
+        summarise_if(is.numeric, sum, na.rm = TRUE) %>% 
+        mutate(yards_per_play = (passing_yds + rushing_yds) / (passing_att + rushing_att)) %>% 
+        arrange(team_name, desc(season))
+
+```
+#Exploratory Data Analysis
+
+Next I split the data by team and took the sum of all variables from 1970-2020 (regular season games) and then graphed this information for a visual representation.
+
+
+```{r}
+team_averages <- team_data_agg %>% 
+        group_by(team_name) %>% 
+        summarise_at(vars(-season), sum) %>% 
+        arrange(desc(wins)) %>% 
+        print(n = 32)
+team_averages
+
+seasonsPerTeam <- team_data_agg %>% 
+        arrange(wins) %>% 
+        ggplot(aes(x = season, y = reorder(team_name, -season), color = season)) +
+        labs(title = "Number of Seasons Per Team", x = "Seasons", y = "Team Name") +
+        guides(color = "none") +
+        geom_point()
+
+seasonsPerTeam
+```
+I then looked at teams vs wins from 2002-2020. Teams with a high number of wins in 2020 include KAN, GNB, BU and teams with a low number of wins include JAX, NYJ, ATL.
+```{r}
+phi_wins <- subset(team_data_agg, team_name == "PHI") %>% 
+        ggplot(aes(x = season, y = wins, color = wins)) +
+        labs(title = "PHI Number of Wins Per Season", x = "Season", y = "Wins") +
+        scale_y_continuous(breaks=c(1:17)) +
+        geom_line() +
+        geom_point()
+phi_wins
+
+jax_wins <- subset(team_data_agg, team_name == "JAX") %>% 
+        ggplot(aes(x = season, y = wins, color = wins)) +
+        labs(title = "JAX Number of Wins Per Season", x = "Season", y = "Wins") +
+        scale_y_continuous(breaks=c(1:17)) +
+        geom_line() +
+        geom_point()
+jax_wins
+
+nyj_wins <- subset(team_data_agg, team_name == "NYJ") %>% 
+        ggplot(aes(x = season, y = wins, color = wins)) +
+        labs(title = "NYJ Number of Wins Per Season", x = "Season", y = "Wins") +
+        scale_y_continuous(breaks=c(1:17)) +
+        geom_line()+
+        geom_point()
+nyj_wins
+
+team_wins <- team_data_agg %>% 
+        ggplot(aes(x = season, y = wins, color = wins)) +
+        labs(title = "Number of Wins Per Season", x = "Season", y = "Wins") +
+        geom_line() +
+        facet_wrap(~ team_name)
+team_wins
+
+wins_2020 <- subset(team_data_agg, season == 2020) %>%
+        ggplot(aes(x = wins, y = reorder(team_name, wins), color = wins)) +
+        labs(title = "Number of Wins in 2020", x = "Wins", y = "Team Name") +
+        geom_point(color = "steelblue")
+wins_2020
+```
+#Linear Regression Model
+
+Now for some predictions! I decided to use a Linear Regression Model to see which predictors have a strong relationship with the number of wins for the 2020 NFL season.
+```{r}
+lr_model_1 <- lm(wins ~ time_of_possession + first_downs + fourth_down_conv_att + fourth_down_conv_cmp +
+                         penalties + penalties_yds + third_down_conv_att + third_down_conv_cmp + total_yards + turnovers +
+                         all_td + safety_md + fumbles + fumbles_forced + fumbles_rec + fumbles_rec_td + fumbles_rec_yds + 
+                         kicking_fga + kicking_fgm + kicking_xpa + kicking_xpm + passing_two_pt_md + passing_att + passing_cmp + 
+                         passing_rating + passing_sacked + passing_sacked_yds + passing_td + passing_yds + punting_tot + punting_blocked +
+                         punting_yds + puntret_tot + puntret_td + puntret_yds + receiving_rec + receiving_targets + receiving_td +
+                         receiving_yds + rushing_att + rushing_td + rushing_yds + kickret_tot + kickret_td + kickret_yds + defense_qb_hits +
+                         defense_sacks + defense_tackles_assists + defense_tackles_combined + defense_tackles_loss + defense_tackles_solo +
+                         defense_int + defense_int_td + defense_int_yds + defense_pass_defended + yards_per_play, data = team_data_agg)
+
+summary(lr_model_1)
+
+resid <- lr_model_1$residuals
+hist(resid)
+
+par(mfrow = c(2,2))
+plot(lr_model_1)
+
+predictors_df <- team_data_agg %>% 
+        select(time_of_possession, first_downs, fourth_down_conv_att , fourth_down_conv_cmp , penalties , penalties_yds , third_down_conv_att , third_down_conv_cmp , total_yards , turnovers , all_td , safety_md , fumbles , fumbles_forced , fumbles_rec , fumbles_rec_td , fumbles_rec_yds , kicking_fga , kicking_fgm , kicking_xpa , kicking_xpm , passing_two_pt_md , passing_att , passing_cmp , passing_rating , passing_sacked , passing_sacked_yds , passing_td , passing_yds , punting_tot , punting_blocked ,punting_yds , puntret_tot , puntret_td , puntret_yds , receiving_rec , receiving_targets , receiving_td , receiving_yds , rushing_att , rushing_td , rushing_yds , kickret_tot , kickret_td , kickret_yds , defense_qb_hits ,  defense_sacks , defense_tackles_assists , defense_tackles_combined , defense_tackles_loss , defense_tackles_solo , defense_int , defense_int_td , defense_int_yds , defense_pass_defended , yards_per_play)
+```
+#Linear Regression Model Summary 
+
+* When looking at the residuals (the difference between actual observed response value and the model's prediction of the response value), there is a mostly symmetrical distribution across these points on the mean value of zero. Therefore, the model predicted points that fall very close to actual observed points. 
+
+* The T-Value is the measure of how many standard deviations the coefficient estimate is from zero. Several predictors are farther away from zero and large relative to standard error such as fourth down conversion attempts (4.875), total yards (5.067), turnovers (-7.378), rushing attempts (5.145), rushing yards (-5.103), defense sacks (7.175), and defense interceptions (5.467) to name a few. 
+
+* The Pr(>|t|) is the probability of observing any value equal or larger than T. A lower P-Value shows that it is unlikely that the relationship between a predictor and the response (total wins) is due to chance. There are 33 predictors with p-values smaller than the 0.05 threshold that can be further analyzed.
+
+* The residual standard error is the measure of the quality of a linear regression fit which can be seen with the plot() function above.
+
+* The adjusted R-squared is used for a Linear Regression model with many variables and is the measure of how well the model fits the actual data. Is it close to 1 and does explain the observed variance in the response variable (number of wins). Therefore, 78.9% of variation in game wins can be explained by our model. 
+
+* And last but not least, the F-statistic. Is there a relationship between predictor and response variables? Since 104 is pretty far from 1, we can reject the null hypothesis and state that there IS indeed a relationship between predictor and repsonse variables. Now to dive into WHICH predictors could predict more wins per season! 
+
+#Possible Predictors
+
+At this point, it's time to play around with some of the predictors. I printed out the predicted wins for each team, each year, based on every predictor. A new data frame is used to store season, predicted wins, and the original data.
+
+I will pick a few predictors with a low T and P value, and that show a significant difference between the league average and the team's statistics from 2020.
+```{r}
+preds <- predict(lr_model_1, predictors_df) %>% 
+        as_tibble() %>% 
+        rename(pred_wins = value)
+
+id_df <- team_data_agg %>% 
+        ungroup %>% 
+        select(season)
+
+pred_df <- bind_cols(predictors_df, preds, id_df) %>% 
+       relocate(season, .after = team_name) %>% 
+        relocate(pred_wins, .after = season)
+
+apply(team_stats_2020, 2, range)
+```
+#Philadelphia Eagles Predictions
+With a 4 win season in 2020, this model can predict a new number of wins for the Eagles' 2020 season based on a new statistic for one predictor. 
+
+```{r}
+league_average_2020 <- team_data_agg %>% 
+        filter(season == 2020) %>% 
+        group_by(season) %>%
+        summarise_if(is.numeric, mean, na.rm =TRUE) %>% 
+        mutate(yards_per_play = (passing_yds + rushing_yds) / (passing_att + rushing_att))
+
+team_stats_2020 <-  team_data_agg %>% 
+        filter(season == 2020) %>% 
+        summarise_if(is.numeric, mean, na.rm =TRUE) %>% 
+        mutate(yards_per_play = (passing_yds + rushing_yds) / (passing_att + rushing_att))
+
+eagles_average_2020 <- team_data_agg %>% 
+        filter(season == 2020 & team_name == "PHI") %>% 
+        mutate(yards_per_play = (passing_yds + rushing_yds) / (passing_att + rushing_att))
+
+###
+
+eagles_updated <- pred_df %>%
+        filter(season == 2020, team_name=='PHI')
+
+eagles_updated %<>% mutate(total_yards = 4098)
+
+
+eagles_pred <- predict(lr_model_1, eagles_updated) %>% 
+        as_tibble() %>% 
+        rename(pred_wins = value)
+
+```
+
