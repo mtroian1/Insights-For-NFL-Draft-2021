@@ -38,19 +38,19 @@ Each stat analyzed below will have a small increase in the team’s total wins b
 
 # Eagles: 
 
-##Total Yards:
+#### Total Yards:
 The Eagles 2020 total yards was 5,357, the league average was 5,746.5, and the team with highest amount of total yards in the league was 6,653. If the Eagles increased their total yards to 6,525 total yards, this increase could put the Eagles at 5 wins in 2020. 
  
-##Receiving Yards:
+#### Receiving Yards:
 The Eagles 2020 receiving yards was 3,709 and the league average was 4,045.75. If the Eagles increased their receiving yards to 4,000 and we adjust their total yards by 291 to reflect that increase (5,648), their total wins in 2020 could have been 6.
  
-##Rushing Attempts:
+#### Rushing Attempts:
 The Eagles 2020 had 403 rushing attempts. The league average was 423.84, and the team with the most rushing attempts for 2020 had 533. If the Eagles boosted their total rushing attempts for the season to 476 (an average of 24 rushing attempts per game), they could have seen an increase in total wins to 5. An increase to the 2020 league maximum rushing attempts of 533 (average of 31 attempts per game) could have led to 6 wins. 
  
-##Yards Per Play
+#### Yards Per Play
 The Eagles' 2020 yards per play (YPP) was 5.75 and the 2020 league average was 6. If the Eagles increased YPP to 6.7, they could have won 5 games in 2020. An increase of YPP to 7 could have led to 6 wins and an increase to 8 YPP could have led to 8 wins.
  
-# Recommendations:
+#### _Recommendations_:
 The insights gathered from the linear regression model and analysis suggest that the Philadelphia Eagles should focus the 2021 season on the following:
  
 * Increase total yards (passing and rushing) - The Eagles dumped Carson Wentz this off-season and it looks like Jalen Hurts is going to be the starting QB.  Hurts did not have inspiring passing numbers in his starts last season and the Eagles likely need to rely on the run more this season. A healthy Miles Sanders (RB) (rank 15 with 867 rushing yards combined with Boston Scott, 59th rank with 374 rushing yards, and Jalen Hurts, 69th rank with 374 rushing yards gives them a lot of firepower on the ground for 2021. 
@@ -65,31 +65,32 @@ The insights gathered from the linear regression model and analysis suggest that
 
 # Jacksonville:
 
-##Total Yards:
+#### Total Yards:
 Jacksonville’s 2020 total yards were 5,227, well below league average.  An increase of 519.5 to the league average of total yards (5,746.5) could have led to 3 wins and an increase to the highest number of total yards (6653) could lead to 4 wins.
  
-##Kicking Field Goals:
+#### Kicking Field Goals:
 Jacksonville attempted 25 field goals and made 18. If they had made all 25, they could have 2.76 wins. This increases to 3 wins if they attempted and made 29 field goals.  If this doesn’t sum up the Jags season last year, I’m not sure what does.
  
-##Kicking Extra Points:
+#### Kicking Extra Points:
 Jacksonville had 36 total touchdowns in 2020. They attempted to kick 28 extra points but made 24, losing 4 points. With the other 8 touchdowns, they could have scored 16 points with two-point conversions. However, they only made 3 two-point conversions, losing an additional 10 points.
  
 If Jacksonville went for 36 extra points and made them all, they could have 3 wins in 2020. Similarly, if they made all attempted 28 extra points AND all attempted 8 two-point conversions, they could have 3 wins for 2020.
  
 The takeaway here, the conversion rate of your extra points matters and Jacksonville needs to do better next year.
  
-##Receiving Yards:
+#### Receiving Yards:
 Jacksonville’s 2020 total receiving yards was 3927. If they increased their receiving yards by 118.75 to reach the league average of 4045.75, they could have seen an increase to 3.58 wins. If they increased receiving yards by 1078 to match the best team for the 2020 season, they could have seen 13 wins!!!
  
-##Yards Per Play:
+#### Yards Per Play:
 Jacksonville’s average yards per play (YPP) for 2020 was 5.79. An increase to the league’s average of 6 YPP could have led to 3 wins and an increase to the highest YPP (7.09) could have led to 5 wins.
  
-#Recommendations: 
-*Draft Trevor Lawrence 
+#### _Recommendations_:
 
-*Increase rushing attempts with a second string running back. Jacksonville has RB James Robinson who ranks 5 with 1070 rushing yards/ 240 rushing attempts, QB Gardner Minshew II who ranks 106 with 153 yards / 29 attempts, and RB Dare Ogunbowale who ranks 110 with 143 yards / 32 attempts. They could consider drafting Travis Etienne from Clemson, Najee Harris from Alabama, Javonte Williams from UNC, or another running back. Depending on if one of those players fall in the first round.
+* Draft Trevor Lawrence 
 
-*Hope Trevor Lawrence saves their franchise 
+* Increase rushing attempts with a second string running back. Jacksonville has RB James Robinson who ranks 5 with 1070 rushing yards/ 240 rushing attempts, QB Gardner Minshew II who ranks 106 with 153 yards / 29 attempts, and RB Dare Ogunbowale who ranks 110 with 143 yards / 32 attempts. They could consider drafting Travis Etienne from Clemson, Najee Harris from Alabama, Javonte Williams from UNC, or another running back. Depending on if one of those players fall in the first round.
+
+* Hope Trevor Lawrence saves their franchise 
 
 ---
 
@@ -97,22 +98,23 @@ Jacksonville’s average yards per play (YPP) for 2020 was 5.79. An increase to 
 Fourth Down Conversion Completed
 The New York Jets completed 7 fourth-down conversions. If they increased the number of conversions to the 2020 league average of 11.3, they could have seen an increase to 4 wins. An increase to 19 conversions would be 4.1 wins.
  
-##Total Yards:
+#### Total Yards:
 The Jets total yards for 2020 was 4,478. An increase to the league average of 5,746.5 could have put their wins at 5 and an increase to 6000 could have improved their total wins to 6. An increase to the highest number of yards in 2020 season (6653) would improve their wins to 7.
  
-##Score More Points 
+#### Score More Points 
 The Jets had 25 total touchdowns in 2020. If they made 31 touchdowns, they could see 4 wins. If they made the league average of 45.5, they could see 5 wins. An increase to 55 touchdowns would put their wins at 6.
  
-##Receiving Yards:
+#### Receiving Yards:
 The Jets had 3066 total receiving yards in 2020. If they increased this amount by 144 yards, they could have had 5 wins. An increase to 4045 receiving yards (the league average for 2020) could have led to 14 wins!
  
-##Rushing Attempts:
+#### Rushing Attempts:
 The jets had a total of 404 rushing attempts in 2020. Increasing this amount to the league average (423.8) rushing attempts could have led to 4 wins. An increase to 460 could have led to 5 wins and an increase to the highest number of rushing attempts (533) would be 7 wins!
  
-##Yards Per Play:
+#### Yards Per Play:
 The Jets had a yard per play average of 5.16 for 2020 and the league average yards per play was 6. An increase to the league average could have led to 5 wins and an increase to 7 yards per play could have led to 8 wins!
  
-# Recommendations:
+#### _Recommendations_:
+
 * Draft a franchise QB.  With Sam Darnold gone, they clearly need to find the guy who will lead this franchise back to relevance. 
  
 * Increase receiving yards by drafting a primary strong receiver. WR Jamison Crowder ranks 55th with 699 receiving yards, WR Breshad Perriman ranks 87th with 505 yards, and Braxton Berrios ranks 120th with 394 yards. They could consider drafting Ja'Marr Chase, Jaylen Waddle, DeVonta Smith, Rondale Moore, or another top WR prospect.
