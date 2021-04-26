@@ -20,6 +20,15 @@ The 2021 NFL draft is less than two weeks away and we certainly have a plethora 
 # Exploratory Graphs: 
 Here are some graphs related to the number of wins per team from regular season games between 1970-2020 that you might find interesting:
 
+![Seasons_Per_Team](https://user-images.githubusercontent.com/68208827/116151762-0816c980-a6b3-11eb-8ae8-8aff249c0505.png)
+
+![2020 Wins](https://user-images.githubusercontent.com/68208827/116151851-27adf200-a6b3-11eb-9808-732e8b7eff7d.png)
+
+![Philadelphia_Wins_Per_Season](https://user-images.githubusercontent.com/68208827/116151793-14028b80-a6b3-11eb-9d9a-eecee0c9e9b2.png)
+
+![Jax_wins_per_season](https://user-images.githubusercontent.com/68208827/116151796-1533b880-a6b3-11eb-980b-5b5512a2cdb1.png)
+
+![NY_wins_per_season](https://user-images.githubusercontent.com/68208827/116151798-1664e580-a6b3-11eb-8730-258205424ee2.png)
 
 
 Houston has only played 20 seasons, Jacksonville and Carolina have played 27 seasons, and Baltimore and Tampa Bay have played 26 seasons. Since these six teams were formed after 1970, this impacts their aggregated data and therefore I subsetted data to include 2002-2020 when all teams were competing. It's interesting that Tampa Bay has played 44 seasons and Cleveland has played 47 seasons!
